@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kattis Graph</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <p>
+      <b>goto: </b>
+      <a href="users.html">Top Users</a>
+      <a href="countries.html">Top Countries</a>
+      <a href="universities.html">Top Universities</a>
+      <a href="nus.html">Top NUS Users</a>
+      <a href="davidchoo.html">davidchoo (me)</a>
+      <a href="about.html">About</a>
+    </p>
+    <h1>Score and rank of kattis user davidchoo (me)
+      <span><a class="srclink" href="https://open.kattis.com/users/davidchoo">source</a></span>
+    </h1>
+    <p class="tip"><b>Tip:</b> Tap on the legends to hide lines</p>
+  </div>
+  <div class="chart-wrapper">
+    <canvas id="chart"></canvas>
+  </div>
+<!-- <script src="node_modules/moment/min/moment.min.js"></script> -->
+<script src="https://npmcdn.com/moment@2.24.0/min/moment.min.js"></script>
+<!-- <script src="node_modules/chart.js/dist/Chart.min.js"></script> -->
+<script src="https://npmcdn.com/chart.js@2.7.3/dist/Chart.min.js"></script>
+<!-- <script src="node_modules/hammerjs/hammer.min.js"></script> -->
+<script src="https://npmcdn.com/hammerjs@2.0.8/hammer.min.js"></script>
+<!-- <script src="node_modules/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js"></script> -->
+<script src="https://npmcdn.com/chartjs-plugin-zoom@0.6.6/chartjs-plugin-zoom.min.js"></script>
+<script>
+var A;
+</script>
+<script>
+const canvasCtx = document.querySelector('#chart').getContext('2d');
+Chart.defaults.global.defaultColor = '#f8f8f8';
+Chart.defaults.global.defaultFontColor = '#f8f8f8';
+fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRttwt7Dp2PTCe8_UB1sDU6NtJwETFgOvx7-uXS0DFJmtj2XUl_mPf3Qhubjoh9Cc6XMjOGKaKSFZdT/pub?gid=0&single=true&output=csv')
+.then(res => res.text())
+.then(csv => {
+  let data = {};
+  let lines = csv.split('\r\n');
+  let headers = lines[0].split(',');
+  lines.shift();
+  for (const [i, header] of headers.entries()) {
+    data[header] = lines.map(l => l.split(',')[i]);
+  }
+  A = data;
+  const rand1 = Math.random();
+  let rand2;
+  do {
+    rand2 = Math.random();
+  } while (Math.abs(rand2 - rand1) < 0.2); // ensure colours are not too similar
+  let chartTest = new Chart(canvasCtx, {
+    type: 'line',
+    data: {
+      labels: data.Time,
+      datasets: [{
+        label: 'Rank',
+        yAxisID: 'rank',
+        backgroundColor: `hsl(${360 * rand1}, 100%, 95%)`,
+        borderColor: `hsl(${360 * rand1}, 100%, 70%)`,
+        data: data.Rank.map((e, i) => ({x: moment(data.Time[i]), y: e})),
+        fill: false
+      },
+      {
+        label: 'Score',
+        yAxisID: 'score',
+        backgroundColor: `hsl(${360 * rand2}, 100%, 95%)`,
+        borderColor: `hsl(${360 * rand2}, 100%, 70%)`,
+        data: data.Score.map((e, i) => ({x: moment(data.Time[i]), y: e})),
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'davidchoo Score and Rank'
+      },
+      legend: {
+        display: true,
+        fullWidth: true,
+        position: 'bottom',
+        labels: {
+          boxWidth: 10
+        }
+      },
+      scales: {
+        xAxes: [
+          {
+            type: 'time',
+            time: {
+              format: 'YYYY-MM-DDTHH:mm:ss.SSSSZ',
+              tooltipFormat: 'll HH:mm',
+              min: moment().subtract(1, 'M') // show data for past month
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'Date'
+            },
+            ticks: {
+              maxRotation: 0
+            },
+            gridLines: {
+              color: '#f8f8f8'
+            }
+          }
+        ],
+        yAxes: [
+          {
+            id: 'rank',
+            type: 'linear',
+            position: 'right',
+            ticks: {
+              reverse: true,
+              max: Math.ceil(Math.max(...data.Rank.map(e => parseFloat(e))) / 200) * 200,
+              min: Math.floor(Math.min(...data.Rank.map(e => parseFloat(e))) / 200) * 200
+              // max: 4000,
+              // min: 3000
+            },
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Rank'
+            },
+            gridLines: {
+              color: '#f8f8f8'
+            }
+          },
+          {
+            id: 'score',
+            type: 'linear',
+            position: 'left',
+            display: true,
+            ticks: {
+              max: Math.ceil(Math.max(...data.Score.map(e => parseFloat(e))) / 10) * 10,
+              min: Math.floor(Math.min(...data.Score.map(e => parseFloat(e))) / 10) * 10
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'Score'
+            },
+            gridLines: {
+              color: '#f8f8f8',
+              borderDash: [5, 5] // dashed lines
+            }
+          },
+        ]
+      },
+      pan: {
+        enabled: true,
+        mode: 'xy',
+        speed: 10,
+        threshold: 10
+      },
+      zoom: {
+        enabled: true,
+        // drag: true,
+        mode: 'xy',
+        limits: {
+          max: 10,
+          min: 5
+        }
+      }
+    }
+  })
+});
+</script>
+</body>
+</html>

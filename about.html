@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kattis Graph</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <p>
+      <b>goto: </b>
+      <a href="users.html">Top Users</a>
+      <a href="countries.html">Top Countries</a>
+      <a href="universities.html">Top Universities</a>
+      <a href="nus.html">Top NUS Users</a>
+      <a href="davidchoo.html">davidchoo (me)</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/hidingmode/kattis-daily-scraper-web">Github</a>
+    </p>
+    <h1>About this site</h1>
+    <p>
+      This is a website to display stats I scraped from Kattis everyday. They are line charts made with <a href="https://www.chartjs.org">chart.js</a> using data that I scrape from <a href="https://open.kattis.com/">kattis</a>. This little static site was coded over my recess week in my year 2 sem 2 (25 - 28 Feb 2019).
+    </p>
+    <p>
+      The charts were inspired by the bump charts in animenewsnetwork weekly anime rankings like <a href="https://www.animenewsnetwork.com/weekly-ranking/2019/winter/.143509">this</a>.
+    </p>
+    <p>
+      I was motivated to do this as I wanted to chart my progress in my Kattis scores. Too bad though I have not been working on Kattis problems recently, but I will still work on them. Although I am an IS (Information Systems) student, I enjoy learning CS modules more than IS modules. So solving Kattis problems is a way for me to self learn algorithms that I would not have learnt from my IS core modules. In NUS, there is a module (<a href="https://www.comp.nus.edu.sg/~stevenha/cs3233.html">CS3233 Competitive Programming</a>) where students use this website to practise. Since I also intended to take on CS3233 if circumstances permit, the more reason for me to work on Kattis.
+    </p>
+    <h3>About Kattis</h3>
+    <p>
+        <a href="https://open.kattis.com/">Kattis</a> is an online judge platform, which means it's a place where people do competitive programming. You score based on the number of problems you solve on the platform. As CS3233 students use Kattis to practise, I guess that's why NUS maintains its ranking in the top 8 universities in Kattis scores.
+    </p>
+    <h3>About the data</h3>
+    <p>
+      The data is scraped using a <a href="https://script.google.com/home">google app script</a> I made to run every day before midnight in Singapore. It basically loads the kattis webpages, picks the data using regex, saves data into <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRttwt7Dp2PTCe8_UB1sDU6NtJwETFgOvx7-uXS0DFJmtj2XUl_mPf3Qhubjoh9Cc6XMjOGKaKSFZdT/pub">this google sheets file</a>.
+    </p>
+    <p>
+      The script has been running consistently at the same time each day. Unfortunately, just recently I had to renew the script due to an issue with OAuth ("The OAuth client was deleted"). So there will be gaps in the data around 25 Feb 2019 and the time it runs each day won't be the same as the original script.
+    </p>
+    <p>
+      The scores will vary by a small number everyday even when a user doesn't solve more problems. Hence the reason my score wobbles slightly everyday. Read more on <a href="https://open.kattis.com/help/ranklist">Kattis scoring system</a>.
+    </p>
+    <h3>About the colours (geeky stuff)</h3>
+    <p>
+      Did you notice that the colours for the line graphs are random each time you load the page? Generating random colours that is unique enough for the number of datasets (lines) was a bit of a challenge. The main idea is to select colours using HSL (hue, saturation, lightness) values, randomizing the hue in particular. To ensure uniformity in the colours so that no 2 colours are too similar, I check if a new random hue is within a predefined range of any existing hue, then try another random hue. Exact code as follows:
+    </p>
+    <pre><code>let rands = [];
+let rand;
+do {
+  rand = Math.random(); // generates random value in [0..1)
+  console.log(i, rand); // if you look at the console logs, you can see the attempted random values
+} while (!rands.every(e => Math.abs(e - rand) > (<b>0.5</b> / noOfDatasets) && rands.length > 0);
+rands.push(rand); // use rand as hue for new dataset</code></pre>
+    <p>
+    <b>0.5</b> is the distinctness of colours (value has to be in (0..1))<br>
+    If value is <= 0, distinctness is not guaranteed as any random values are accepted<br>
+    If value is close to 1, colours are more distinct but takes longer to find<br>
+    If value is >= 1, infinite loop
+    </p>
+    <h3>Todos when I update this site</h3>
+    <ul>
+      <li>Responsive design! (difficult to squeeze chart in small screen D:)</li>
+      <li>Add filtering for NUS Top 50 data (cos 50 lines in a chart is too many)</li>
+      <li>Add my comments under each graph (data can be stored in a shared json in gdrive)</li>
+      <li>Maybe add bump charts (which was the initial idea)</li>
+      <li>Use Vue/React (when I'm more familiar with them)</li>
+      <li>Style better (I like Consolas/monospace fonts for simplicity, and dark theme to protect my retinas :p)</li>
+      <li>Maybe store the data in a db instead of a spreadsheet (when the spreadsheet is maxed out)</li>
+    </ul>
+  </div>
+</body>
+</html>

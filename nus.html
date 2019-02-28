@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kattis Graph</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <p>
+      <b>goto: </b>
+      <a href="users.html">Top Users</a>
+      <a href="countries.html">Top Countries</a>
+      <a href="universities.html">Top Universities</a>
+      <a href="nus.html">Top NUS Users</a>
+      <a href="davidchoo.html">davidchoo (me)</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/hidingmode/kattis-daily-scraper-web">Github</a>
+    </p>
+    <h1>Top 50 Kattis Users in NUS
+      <span><a class="srclink" href="https://open.kattis.com/universities/nus.edu.sg">source</a></span>
+    </h1>
+    <p class="tip"><b>Tip:</b> Tap on the legends to hide lines</p>
+  </div>
+  
+  <div class="chart-wrapper">
+    <canvas id="chart"></canvas>
+  </div>
+<script src="node_modules/moment/min/moment.min.js"></script>
+<script src="node_modules/chart.js/dist/Chart.min.js"></script>
+<!-- <script src="https://npmcdn.com/chart.js@latest/dist/Chart.bundle.min.js"></script> -->
+<script src="node_modules/hammerjs/hammer.min.js"></script>
+<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script> -->
+<script src="node_modules/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/0.6.3/chartjs-plugin-zoom.js"></script> -->
+<script src="run-chart.js"></script>
+<script>
+  runChart('https://docs.google.com/spreadsheets/d/e/2PACX-1vRttwt7Dp2PTCe8_UB1sDU6NtJwETFgOvx7-uXS0DFJmtj2XUl_mPf3Qhubjoh9Cc6XMjOGKaKSFZdT/pub?gid=1560593693&single=true&output=csv', 'Top 50 Kattis Users in NUS');
+</script>
+</body>
+</html>
