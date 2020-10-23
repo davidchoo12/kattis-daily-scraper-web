@@ -4,7 +4,7 @@ function runChart(dataUrl, chartTitle) {
 Chart.defaults.global.defaultColor = '#f8f8f8';
 Chart.defaults.global.defaultFontColor = '#f8f8f8';
 const nusCanvas = document.querySelector('#chart').getContext('2d');
-fetch(dataUrl)
+fetch('https://cors-anywhere.herokuapp.com/' + dataUrl)
 .then(res => res.text())
 .then(csv => {
   let data = {};
